@@ -1,5 +1,6 @@
 import express from "express";
 import puppeteer from "puppeteer";
+import fs from "fs";
 
 import JsBarcode from "jsbarcode";
 import { createSVGWindow } from "svgdom";
@@ -8,32 +9,24 @@ import { SVG, registerWindow } from "@svgdotjs/svg.js";
 // створюємо "віртуальне" DOM-середовище для SVG
 const window = createSVGWindow();
 const document = window.document;
-
 registerWindow(window, document);
+
 // створюємо SVG
-const draw = SVG(document.documentElement);
-const barcode = draw.rect(200, 100); // порожній прямокутник
-JsBarcode(barcode.node, "123456789012", {
+const canvas = SVG(document.documentElement);
+canvas.rect(200, 100).fill("yellow").move(50, 50); // порожній прямокутник
+
+// console.log(["canvas"], canvas.svg());
+
+JsBarcode(canvas.node, "1234567890128", {
   format: "EAN13", // тип штрихкоду
   displayValue: true, // підпис під кодом
-  height: 50,
+  height: 80,
+  width: 2,
+  xmlDocument: document,
 });
 
-// const canvas = SVG(document.documentElement);
-// canvas.rect(100, 100).fill("yellow").move(50, 50);
-
-// console.log(canvas.svg());
-
-// const draw = SVG(document.documentElement);
-// const barcode = draw.rect(200, 100); // порожній прямокутник
-// JsBarcode(barcode.node, "123456789012", {
-//   format: "EAN13",
-//   displayValue: true,
-//   height: 50,
-// });
-
-// // отримуємо SVG як рядок
-const svgString = barcode.svg();
+const svgString = canvas.svg();
+const svgBase64 = Buffer.from(svgString).toString("base64");
 
 const app = express();
 
@@ -63,7 +56,7 @@ app.get("/generate-pdf", async (req, res) => {
       <html>
         <body style="font-family: Arial, sans-serif; padding: 30px;">
           <h1 style="text-align: center;">PDF з Node.js</h1>
-          <div>${svgString}</div>
+          <div><img src="data:image/svg+xml;base64,${svgBase64}" /></div>
           <p>Згенеровано за допомогою Puppeteer</p>
           <p>Можна додавати будь-який HTML та CSS!</p>
         </body>
@@ -90,6 +83,8 @@ app.get("/generate-pdf", async (req, res) => {
     res.status(500).send("Error generating PDF");
   }
 });
-
+const PORT = 3000;
 // Запуск сервера
-app.listen(3000, () => console.log("Server running on http://localhost:3000"));
+app.listen(PORT, () =>
+  console.log(`Server running on http://localhost:${PORT}`),
+);
