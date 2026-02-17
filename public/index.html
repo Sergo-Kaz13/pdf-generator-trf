@@ -10,10 +10,22 @@
   </head>
   <body>
     <div class="container">
-      <h1>Генератор TRF</h1>
+      <h1 class="title">Generate Transport Label</h1>
       <form id="pdfForm" class="pdfForm">
-        <div>
+        <!-- <div>
           <input type="text" id="name" name="name" placeholder="TRF" required />
+        </div> -->
+        <div class="trf-group">
+          <span class="title-trf">TRF Numbers:</span>
+
+          <div id="trf-container">
+            <div class="trf-item">
+              <input type="text" name="trf[]" placeholder="Enter TRF number" />
+              <!-- <button type="button" class="remove-btn">✕</button> -->
+            </div>
+          </div>
+
+          <button class="btn-add" type="button" id="add-trf">+ Add TRF</button>
         </div>
 
         <div>
@@ -27,7 +39,26 @@
           </div>
         </div>
 
-        <button type="submit">Згенерувати TRF</button>
+        <div class="checkbox-cards">
+          <label class="card">
+            <input type="checkbox" checked name="card" value="orders" />
+            <span>ORDERS</span>
+          </label>
+          <label class="card">
+            <input type="checkbox" name="card" value="adt" />
+            <span>ATD</span>
+          </label>
+          <label class="card">
+            <input type="checkbox" name="card" value="btb" />
+            <span>BTB</span>
+          </label>
+          <label class="card">
+            <input type="checkbox" name="card" value="single" />
+            <span>SINGLE</span>
+          </label>
+        </div>
+
+        <button class="btn" type="submit">Generate Transport Label</button>
       </form>
     </div>
   </body>
