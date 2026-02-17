@@ -35,21 +35,25 @@ const app = express();
 app.use(express.static("public"));
 
 // app.get("/", (req, res) => {
-//   res.send(`
-//     <html>
-//       <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-//         <h1>PDF Generator</h1>
-//         <p>Натисни кнопку нижче, щоб згенерувати PDF</p>
-//         <a href="/generate-pdf">
-//           <button style="padding: 10px 20px; font-size: 16px;">Згенерувати PDF</button>
-//         </a>
-//       </body>
-//     </html>
-//   `);
+// res.send(`
+//   <html>
+//     <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+//       <h1>PDF Generator</h1>
+//       <p>Натисни кнопку нижче, щоб згенерувати PDF</p>
+//       <a href="/generate-pdf">
+//         <button style="padding: 10px 20px; font-size: 16px;">Згенерувати PDF</button>
+//       </a>
+//     </body>
+//   </html>
+// `);
 // });
 
+// app.use(express.json());
 // Маршрут для генерації PDF
-app.get("/generate-pdf", async (req, res) => {
+app.post("/api/generate-pdf", async (req, res) => {
+  const data = req.body;
+  console.log(["data"], data);
+
   try {
     const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
     const page = await browser.newPage();
