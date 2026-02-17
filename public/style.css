@@ -1,0 +1,27 @@
+.pdfForm {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 400px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 1rem;
+}
+
+.select-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.select-wrapper label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+select {
+  padding: 5px 10px;
+  font-size: 16px;
+  width: 200px;
+}
