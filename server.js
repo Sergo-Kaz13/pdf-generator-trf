@@ -55,7 +55,9 @@ app.post("/api/generate-pdf", async (req, res) => {
   console.log(["data"], data);
 
   try {
-    const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
     const page = await browser.newPage();
 
     // HTML, який буде в PDF

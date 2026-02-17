@@ -68,7 +68,6 @@ form.addEventListener("submit", async (e) => {
     // a.download = "file.pdf"; // ім’я файлу
     // a.click();
     // window.URL.revokeObjectURL(url);
-    setTimeout(() => window.URL.revokeObjectURL(url), 10000);
   } catch (err) {
     console.error(err);
     alert("Error generating PDF");
