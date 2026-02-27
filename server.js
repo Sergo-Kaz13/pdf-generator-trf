@@ -18,7 +18,7 @@ canvas.rect(200, 100).fill("yellow").move(50, 50); // порожній прям�
 // console.log(["canvas"], canvas.svg());
 
 JsBarcode(canvas.node, "1234567890128", {
-  format: "EAN13", // тип штрихкоду
+  format: "CODE128", // тип штрихкоду
   displayValue: true, // підпис під кодом
   height: 80,
   width: 2,
