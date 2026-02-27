@@ -17,6 +17,7 @@
     "chromium": "^3.0.3",
     "express": "^5.2.1",
     "jsbarcode": "^3.12.3",
+    "puppeteer": "^24.37.5",
     "puppeteer-core": "^24.37.5",
     "svgdom": "^0.1.23"
   }

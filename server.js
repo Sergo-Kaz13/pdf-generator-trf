@@ -1,10 +1,12 @@
 import express from "express";
-import puppeteer from "puppeteer-core";
+import puppeteerCore from "puppeteer-core";
+import puppeteer from "puppeteer";
 import chromium from "@sparticuz/chromium";
 
 import JsBarcode from "jsbarcode";
 import { createSVGWindow } from "svgdom";
 import { SVG, registerWindow } from "@svgdotjs/svg.js";
+import puppeteer from "puppeteer";
 
 // створюємо "віртуальне" DOM-середовище для SVG
 const window = createSVGWindow();
@@ -39,13 +41,19 @@ app.post("/api/generate-pdf", async (req, res) => {
   const data = req.body;
   console.log(["data"], data);
 
+  const isProduction = process.env.NODE_ENV === "production";
+
   try {
-    const browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
-    });
+    const browser = isProduction
+      ? await puppeteerCore.launch({
+          args: chromium.args,
+          defaultViewport: chromium.defaultViewport,
+          executablePath: await chromium.executablePath(),
+          headless: chromium.headless,
+        })
+      : await puppeteer.launch({
+          args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        });
     // const browser = await puppeteer.launch({
     //   args: ["--no-sandbox", "--disable-setuid-sandbox"],
     // });
