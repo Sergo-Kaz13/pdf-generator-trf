@@ -1,6 +1,6 @@
 import express from "express";
-import puppeteer from "puppeteer";
-import fs from "fs";
+import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
 
 import JsBarcode from "jsbarcode";
 import { createSVGWindow } from "svgdom";
@@ -34,21 +34,6 @@ const app = express();
 
 app.use(express.static("public"));
 
-// app.get("/", (req, res) => {
-// res.send(`
-//   <html>
-//     <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-//       <h1>PDF Generator</h1>
-//       <p>Натисни кнопку нижче, щоб згенерувати PDF</p>
-//       <a href="/generate-pdf">
-//         <button style="padding: 10px 20px; font-size: 16px;">Згенерувати PDF</button>
-//       </a>
-//     </body>
-//   </html>
-// `);
-// });
-
-// app.use(express.json());
 // Маршрут для генерації PDF
 app.post("/api/generate-pdf", async (req, res) => {
   const data = req.body;
@@ -56,8 +41,14 @@ app.post("/api/generate-pdf", async (req, res) => {
 
   try {
     const browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
     });
+    // const browser = await puppeteer.launch({
+    //   args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    // });
     const page = await browser.newPage();
 
     // HTML, який буде в PDF
