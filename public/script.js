@@ -6,7 +6,7 @@ addBtn.addEventListener("click", () => {
   div.classList.add("trf-item");
 
   div.innerHTML = `
-    <input type="text" name="trf[]" placeholder="Enter TRF number" />
+    <input type="text" name="trf" placeholder="Enter TRF number" />
     <button type="button" class="remove-btn">✕</button>
   `;
 
