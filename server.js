@@ -22,7 +22,7 @@ function generateBarcode(barcode) {
     format: "CODE128", // тип штрихкоду
     displayValue: false, // підпис під кодом
     height: 50,
-    width: 1.5,
+    width: 2,
     xmlDocument: document,
   });
 
@@ -31,8 +31,8 @@ function generateBarcode(barcode) {
 
   // return `<img src="data:image/svg+xml;base64,${svgBase64}" />`;
   return `
-    <div>
-    <span style="font-size: 36px; border-bottom: 2px solid black; text-align: center; display: block;">${barcode}</span>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+    <span style="font-size: 42px; font-weight: bold; border-bottom: 2px solid black; text-align: center; display: block;">${barcode}</span>
     <img src="data:image/svg+xml;base64,${svgBase64}" />
     </div>`;
 
@@ -88,7 +88,7 @@ app.post("/api/generate-pdf", async (req, res) => {
     await page.setContent(`
       <html>
         <body style="font-family: Arial, sans-serif; height: 180mm; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%;">
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 35px; width: 100%;">
             ${barcodesHtml}
           </div>
           <div style="display: flex; justify-content: center; align-items: center; font-size: 74px; font-weight: bold; text-transform: uppercase; width: 100%; gap: 15px;">
