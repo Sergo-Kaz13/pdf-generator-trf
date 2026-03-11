@@ -8,9 +8,8 @@ import { createSVGWindow } from "svgdom";
 import { SVG, registerWindow } from "@svgdotjs/svg.js";
 
 function generateBarcode(barcode) {
-  if(!barcode) {
-    throw new Error("Barcode is required") 
-  }
+  if (!barcode) throw new Error("Barcode is required");
+
   // створюємо "віртуальне" DOM-середовище для SVG
   const window = createSVGWindow();
   const document = window.document;
@@ -18,7 +17,6 @@ function generateBarcode(barcode) {
   // створюємо SVG
   const canvas = SVG(document.documentElement);
   canvas.rect(200, 100).fill("yellow").move(50, 50); // порожній прямокутник
-
 
   JsBarcode(canvas.node, String(barcode).trim(), {
     format: "CODE128", // тип штрихкоду
@@ -57,10 +55,10 @@ app.post("/api/generate-pdf", async (req, res) => {
   const arrTrf = Array.isArray(data.trf) ? data.trf.filter(Boolean) : data.trf;
 
   const formatted = new Date().toLocaleDateString("uk-UA", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "2-digit",
-    });
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+  });
 
   const barcodesHtml =
     Array.isArray(arrTrf) && arrTrf.length > 0
@@ -90,7 +88,7 @@ app.post("/api/generate-pdf", async (req, res) => {
     await page.setContent(`
       <html>
         <body style="font-family: Arial, sans-serif; height: 180mm; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
-          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; width: 100%;">
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%;">
             ${barcodesHtml}
           </div>
           <div style="display: flex; justify-content: center; align-items: center; font-size: 74px; font-weight: bold; text-transform: uppercase; width: 100%; gap: 15px;">
@@ -98,9 +96,9 @@ app.post("/api/generate-pdf", async (req, res) => {
             <div style="text-align: center;">&gt;&gt;&gt;</div>
             <p>${data.country}</p>
           </div>
-          <div style="font-size: 34px; text-align: center; text-transform: uppercase; font-weight: bold;">${detail}</div>
+          <div style="font-size: 36px; text-align: center; text-transform: uppercase; font-weight: bold;">${detail}</div>
           <div style="display: flex; justify-content: space-between; width: 100%; font-size: 24px;">
-            <div style="font-size: 32px;">${formatted}</div>
+            <div style="font-size: 34px;">${formatted}</div>
             <div>pallet: 1/1</div>
           </div>
         </body>
