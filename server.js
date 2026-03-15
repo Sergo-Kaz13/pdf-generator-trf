@@ -88,7 +88,7 @@ app.post("/api/generate-pdf", async (req, res) => {
     await page.setContent(`
       <html>
         <body style="font-family: Arial, sans-serif; height: 180mm; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 35px; width: 100%;">
+          <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 35px; width: 100%;">
             ${barcodesHtml}
           </div>
           <div style="display: flex; justify-content: center; align-items: center; font-size: 74px; font-weight: bold; text-transform: uppercase; width: 100%; gap: 15px;">
@@ -98,7 +98,7 @@ app.post("/api/generate-pdf", async (req, res) => {
           </div>
           <div style="font-size: 36px; text-align: center; text-transform: uppercase; font-weight: bold;">${detail}</div>
           <div style="display: flex; justify-content: space-between; width: 100%; font-size: 24px;">
-            <div style="font-size: 34px;">${formatted}</div>
+            <div style="font-size: 38px; font-weight: bold;">${formatted}</div>
             <div>pallet: 1/1</div>
           </div>
         </body>
