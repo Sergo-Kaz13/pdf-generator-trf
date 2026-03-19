@@ -125,6 +125,74 @@ app.post("/api/generate-pdf", async (req, res) => {
     res.status(500).send("Error generating PDF");
   }
 });
+
+app.post("/api/generate-articule", async (req, res) => {
+  const data = req.body;
+  console.log(["data"], data);
+
+  if (!data.articul) {
+    return res.status(400).send("articul is required");
+  }
+
+  const articul = data.articul.split(" ").filter(Boolean);
+  console.log(["articul"], articul);
+
+  const arrTrf = Array.isArray(articul) ? articul.filter(Boolean) : articul;
+
+  const barcodesHtml =
+    Array.isArray(arrTrf) && arrTrf.length > 0
+      ? arrTrf.map((item) => generateBarcode(item)).join("")
+      : arrTrf
+        ? generateBarcode(arrTrf)
+        : "";
+
+  const isProduction = process.env.NODE_ENV === "production";
+
+  try {
+    const browser = isProduction
+      ? await puppeteerCore.launch({
+          args: chromium.args,
+          defaultViewport: chromium.defaultViewport,
+          executablePath: await chromium.executablePath(),
+          headless: chromium.headless,
+        })
+      : await puppeteer.launch({
+          args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        });
+    const page = await browser.newPage();
+
+    // HTML, який буде в PDF
+    await page.setContent(`
+      <html>
+        <body style="font-family: Arial, sans-serif; height: 180mm; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+          <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 35px; width: 100%;">
+            ${barcodesHtml}
+          </div>
+        </body>
+      </html>
+    `);
+
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      landscape: true,
+      printBackground: true,
+      margin: { top: 20, right: 20, bottom: 20, left: 20 },
+    });
+
+    await browser.close();
+
+    res.set({
+      "Content-Type": "application/pdf",
+      "Content-Disposition": "attachment; filename=file.pdf",
+    });
+
+    res.send(pdfBuffer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error");
+  }
+});
+
 const PORT = 3000;
 // Запуск сервера
 app.listen(PORT, () =>

@@ -1,6 +1,9 @@
 const container = document.getElementById("trf-container");
 const addBtn = document.getElementById("add-trf");
 
+const btnArticul = document.getElementById("btnArticul");
+const inputArticul = document.getElementById("inputArticul");
+
 addBtn.addEventListener("click", () => {
   const div = document.createElement("div");
   div.classList.add("trf-item");
@@ -72,4 +75,28 @@ form.addEventListener("submit", async (e) => {
     console.error(err);
     alert("Error generating PDF");
   }
+});
+
+btnArticul.addEventListener("click", async () => {
+  try {
+    const response = await fetch("/api/generate-articule", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ articul: inputArticul.value }),
+    });
+
+    if (!response.ok) throw new Error("Network error");
+
+    // отримуємо PDF як Blob
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    window.open(url, "_blank");
+  } catch (error) {
+    console.error(err);
+    alert("Error generating articul");
+  }
+  console.log(["inputArticul"], inputArticul.value);
 });
