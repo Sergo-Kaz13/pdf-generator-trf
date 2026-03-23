@@ -96,7 +96,7 @@ app.post("/api/generate-pdf", async (req, res) => {
             <div style="text-align: center;">&gt;&gt;&gt;</div>
             <p>${data.country}</p>
           </div>
-          <div style="font-size: 36px; text-align: center; text-transform: uppercase; font-weight: bold;">${detail}</div>
+          <div style="font-size: 36px; text-align: center; text-transform: uppercase; font-weight: bold;">${detail ? detail : ""}</div>
           <div style="display: flex; justify-content: space-between; width: 100%; font-size: 24px;">
             <div style="font-size: 38px; font-weight: bold;">${formatted}</div>
             <div>pallet: 1/1</div>
