@@ -84,8 +84,10 @@ btnArticul.addEventListener("click", async () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ articul: inputArticul.value }),
+      body: JSON.stringify([inputArticul.value]),
     });
+
+    console.log(["response"], response);
 
     if (!response.ok) throw new Error("Network error");
 

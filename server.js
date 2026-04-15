@@ -7,8 +7,11 @@ import JsBarcode from "jsbarcode";
 import { createSVGWindow } from "svgdom";
 import { SVG, registerWindow } from "@svgdotjs/svg.js";
 
-function generateBarcode(barcode) {
-  if (!barcode) throw new Error("Barcode is required");
+function generateBarcode(data) {
+  const barcodeValue = typeof data === "string" ? data : data.idArticle;
+  if (!barcodeValue) throw new Error("Barcode is required");
+
+  console.log(["barcodeValue"], barcodeValue);
 
   // створюємо "віртуальне" DOM-середовище для SVG
   const window = createSVGWindow();
@@ -18,7 +21,7 @@ function generateBarcode(barcode) {
   const canvas = SVG(document.documentElement);
   canvas.rect(200, 100).fill("yellow").move(50, 50); // порожній прямокутник
 
-  JsBarcode(canvas.node, String(barcode).trim(), {
+  JsBarcode(canvas.node, String(barcodeValue).trim(), {
     format: "CODE128", // тип штрихкоду
     displayValue: false, // підпис під кодом
     height: 50,
@@ -29,10 +32,17 @@ function generateBarcode(barcode) {
   const svgString = canvas.svg();
   const svgBase64 = Buffer.from(svgString).toString("base64");
 
-  // return `<img src="data:image/svg+xml;base64,${svgBase64}" />`;
+  let label = barcodeValue;
+
+  if (typeof data === "object") {
+    label = `<span style="font-size: 24px; background-color: yellow; padding: 5px;">${data.marka}</span><span style="font-size: 24px;">${data.numerArticle}</span>`;
+  }
+
   return `
     <div style="display: flex; flex-direction: column; align-items: center;">
-    <span style="font-size: 42px; font-weight: bold; border-bottom: 2px solid black; text-align: center; display: block;">${barcode}</span>
+    <span style="font-size: 42px; font-weight: bold; border-bottom: 2px solid black; text-align: center; display: flex; flex-direction: column; align-items: center;">
+      ${label}
+    </span>
     <img src="data:image/svg+xml;base64,${svgBase64}" />
     </div>`;
 
@@ -127,24 +137,14 @@ app.post("/api/generate-pdf", async (req, res) => {
 });
 
 app.post("/api/generate-articule", async (req, res) => {
-  const data = req.body;
-  console.log(["data"], data);
+  const data = JSON.parse(req.body);
+  console.log(["data"], typeof data);
 
-  if (!data.articul) {
-    return res.status(400).send("articul is required");
+  if (!Array.isArray(data) || data.length === 0) {
+    return res.status(400).send("Body must be a non-empty array of objects");
   }
 
-  const articul = data.articul.split(" ").filter(Boolean);
-  console.log(["articul"], articul);
-
-  const arrTrf = Array.isArray(articul) ? articul.filter(Boolean) : articul;
-
-  const barcodesHtml =
-    Array.isArray(arrTrf) && arrTrf.length > 0
-      ? arrTrf.map((item) => generateBarcode(item)).join("")
-      : arrTrf
-        ? generateBarcode(arrTrf)
-        : "";
+  const barcodesHtml = data.map((item) => generateBarcode(item));
 
   const isProduction = process.env.NODE_ENV === "production";
 
