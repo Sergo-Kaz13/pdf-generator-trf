@@ -94,11 +94,14 @@ select {
 .checkbox-cards {
   display: flex;
   gap: 15px;
+  flex-wrap: wrap;
 }
 
 .card {
   cursor: pointer;
   transition: 0.2s;
+  display: flex;
+  flex-wrap: no-wrap;
 }
 
 .btn {
